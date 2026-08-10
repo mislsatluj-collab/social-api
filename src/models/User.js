@@ -89,6 +89,21 @@ const userSchema = new mongoose.Schema(
             default: 0
         },
 
+        password: {
+            type: String,
+            default: ""
+        },
+
+        failedLoginAttempts: {
+            type: Number,
+            default: 0
+        },
+
+        lockUntil: {
+            type: Date,
+            default: null
+        },
+
         lastLogin: {
             type: Date,
             default: null

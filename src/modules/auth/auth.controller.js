@@ -1,5 +1,39 @@
 const authService = require("./auth.service");
 
+// Check Email
+exports.checkEmail = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+        const response = await authService.checkEmailService(email);
+        return res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Login with Password
+exports.loginWithPassword = async (req, res, next) => {
+    try {
+        const response = await authService.loginWithPasswordService(req.body);
+        return res.status(200).json({
+            success: true,
+            ...response
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Reset Password
+exports.resetPassword = async (req, res, next) => {
+    try {
+        const response = await authService.resetPasswordService(req.body);
+        return res.status(200).json(response);
+    } catch (error) {
+        next(error);
+    }
+};
+
 // Send OTP
 exports.sendOTP = async (req, res, next) => {
     try {

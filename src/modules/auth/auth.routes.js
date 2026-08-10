@@ -27,6 +27,10 @@ router.post(
     authController.completeProfile
 );
 
+router.post("/check-email", authController.checkEmail);
+router.post("/login-password", authController.loginWithPassword);
+router.post("/reset-password", authController.resetPassword);
+
 // Public Routes
 router.post("/send-otp", authController.sendOTP);
 
