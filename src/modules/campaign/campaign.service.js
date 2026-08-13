@@ -185,7 +185,7 @@ const getVolunteerFeedService = async (userId) => {
         trackingLinkMap[link.campaign.toString()] = link.trackingCode;
     });
 
-    const baseUrl = process.env.BASE_URL || "https://dvm-znsy.onrender.com";
+    const baseUrl = process.env.BASE_URL || "https://social.mislsatluj.in";
 
     const feed = campaigns.map(campaign => {
         return {
