@@ -237,7 +237,9 @@ const completeProfileService = async ({
     let joinedLeader = null;
     let myLeaderCode = null;
 
-    if (role === "leader") {
+    const userRole = role || "volunteer";
+
+    if (userRole === "leader") {
         if (!process.env.LEADER_REGISTRATION_CODE) {
             throw new Error("Leader registration code is not configured on the server.");
         }
@@ -247,11 +249,32 @@ const completeProfileService = async ({
         myLeaderCode = await createUniqueLeaderCode();
     }
 
-    if (role === "volunteer") {
-        const leader = await User.findOne({ leaderCode });
-
+    if (userRole === "volunteer") {
+        let leader = null;
+        if (leaderCode) {
+            leader = await User.findOne({ leaderCode });
+        }
         if (!leader) {
-            throw new Error("Invalid leader code.");
+            // Find or automatically create/assign the default Elveory leader
+            leader = await User.findOne({
+                $or: [
+                    { leaderCode: "ELVEORY" },
+                    { role: "leader" }
+                ]
+            });
+
+            if (!leader) {
+                leader = await User.create({
+                    name: "Elveory Marketing Solution",
+                    email: "elveory@marketingsolution.com",
+                    mobile: "0000000000",
+                    role: "leader",
+                    leaderCode: "ELVEORY",
+                    isVerified: true,
+                    isProfileCompleted: true,
+                    isActive: true
+                });
+            }
         }
 
         joinedLeader = leader._id;
@@ -268,7 +291,7 @@ const completeProfileService = async ({
         name,
         email,
         mobile,
-        role,
+        role: userRole,
         password: hashedPassword,
         leaderCode: myLeaderCode,
         joinedLeader,
@@ -276,7 +299,7 @@ const completeProfileService = async ({
         district: district || ""
     });
 
-    if (role === "volunteer" && joinedLeader) {
+    if (userRole === "volunteer" && joinedLeader) {
         await generateLinksForVolunteer(user._id, joinedLeader);
     }
 

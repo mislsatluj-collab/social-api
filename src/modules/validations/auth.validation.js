@@ -38,9 +38,8 @@ exports.completeProfile = [
     },
     {
         name: "role",
-        required: true,
-        type: "string",
-        enum: ["leader", "volunteer"]
+        required: false,
+        type: "string"
     },
     {
         name: "mobile",
